@@ -1,0 +1,55 @@
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches: [main, master, development]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      PROJECT_NAME: ${{ vars.PROJECT_NAME }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Ensure Pages project exists (idempotent)
+        uses: cloudflare/wrangler-action@v3
+        continue-on-error: true
+        with:
+          apiToken: ${{ env.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ env.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages project create ${{ vars.PROJECT_NAME }} --production-branch=main
+
+      - name: Deploy to Cloudflare Pages
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ env.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ env.CLOUDFLARE_ACCOUNT_ID }}
+          packageManager: npm
+          # Use current branch instead of hardcoding "main"
+          command: >
+            pages deploy dist
+            --project-name=${{ vars.PROJECT_NAME }}
+            --branch=${{ github.ref_name }}
+
+      - name: Print deployment URL
+        run: |
+          echo "Deployment URL: ${{ steps.deploy.outputs.deployment-url }}"
