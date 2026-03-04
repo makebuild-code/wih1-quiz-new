@@ -1,8 +1,8 @@
 {
-  "name": "@makebuild-code/mb-project-starter",
+  "name": "@makebuild-code/wih1-quiz",
   "version": "0.0.0",
-  "description": "Developer starter template for Makebuild projects.",
-  "homepage": "https://github.com/makebuild-code/mb-project-starter#readme",
+  "description": "WIH1 Quiz",
+  "homepage": "https://github.com/makebuild-code/wih1-quiz#readme",
   "license": "ISC",
   "keywords": [],
   "author": {
@@ -11,10 +11,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/makebuild-code/mb-project-starter.git"
+    "url": "git+https://github.com/makebuild-code/wih1-quiz.git"
   },
   "bugs": {
-    "url": "https://github.com/makebuild-code/mb-project-starter/issues"
+    "url": "https://github.com/makebuild-code/wih1-quiz/issues"
   },
   "type": "module",
   "main": "src/index.js",
